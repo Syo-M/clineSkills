@@ -1,0 +1,13 @@
+# Cline用 Qwen Modelfile — Actモード(コード生成・編集)推奨
+# 作成: ollama create qwen3.6-cline -f ollama/Modelfile.qwen
+# 注: Ollamaのnum_ctxデフォルト(2-4K)ではClineのシステムプロンプトが収まらず必ず壊れます。
+# サンプリングはQwen3-Coder公式推奨値(temperature 0.7 / top_p 0.8 / top_k 20 / repeat 1.05)。
+# 極端な低temperatureはQwen系で繰り返しループを誘発するため使わないこと。
+# 参考: Cline公式は32GB級RAMの最低ラインとして Qwen3 Coder 30B 4-bit を推奨。
+#       乗り換える場合は FROM を qwen3-coder:30b に変更してください(約18GBでメモリ余裕も増える)。
+FROM qwen3.6:latest
+PARAMETER num_ctx 32768
+PARAMETER temperature 0.7
+PARAMETER top_p 0.8
+PARAMETER top_k 20
+PARAMETER repeat_penalty 1.05

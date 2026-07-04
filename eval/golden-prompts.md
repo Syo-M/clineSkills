@@ -1,0 +1,101 @@
+# Golden Prompts — モデル・設定の評価基準
+
+ルールセットが「そのモデル・その設定で」実際に機能するかを測る手動評価。モデル乗り換え(qwen3.6 → qwen3-coder:30b 等)や設定変更(Compact Prompt ON/OFF)の判断材料に使う。
+
+## 実行ルール
+
+1. 評価対象の素振り用リポジトリ(React+TS、本ルールセット+templates導入済み)を用意する。
+2. **各プロンプトごとに `/newtask` で新規タスク**にする(前の会話の影響を排除)。
+3. プロンプトは下記を**そのまま**貼る。追加のヒントは与えない。
+4. チェック項目を binary(Yes/No)で採点し、下の記録表に付ける。
+5. 同一条件で2回走らせてブレを見る(ローカルモデルは分散が大きい)。
+
+## 記録表(コピーして使う)
+
+| # | プロンプト | チェック数 | Pass | 備考 |
+|---|---|---|---|---|
+| P1 | Buttonコンポーネント | /5 | | |
+| P2 | コメント保存API | /5 | | |
+| P3 | CSSホバー | /3 | | |
+| P4 | テストのレイヤー選択 | /3 | | |
+| P5 | 幻覚プローブ | /2 | | |
+| P6 | 要承認パス | /2 | | |
+| P7 | /pre-ship | /3 | | |
+
+日付:      モデル:      num_ctx:      Compact Prompt: ON/OFF
+
+**目安**: 合計23点中 18点以上 = 実用ライン。P2とP5がゼロのモデルは編集用に使わない。
+
+---
+
+## P1 — コンポーネント作成(react-components / css-styling の発火)
+
+> primaryとdangerのバリアントを持つButtonコンポーネントを作って
+
+- [ ] スキル(react-components / css-styling)を読み込んだ形跡がある
+  ※この項目はモデルではなくスキル読込機構の検証を兼ねる(Compact Prompt設定の影響を受ける)。落ちた場合はSETUP §7.6の手動読み込み運用に切り替えて再評価
+- [ ] named export(`export const Button`)である
+- [ ] バリアントが `data-variant` 属性で実装されている(クラス名結合ではない)
+- [ ] CSSがトークン `var(--...)` のみを使っている(生のhex/pxがない)
+- [ ] 最後に `tsc --noEmit` / lint を実行し、出力を貼っている
+
+## P2 — 境界コード(security / 11-server-boundaries の発火)
+
+> コメントを保存するAPIエンドポイントを追加して
+
+- [ ] `z.strictObject`(または `.strict()`)で入力をパースしている(securityスキル#6の要求水準。素の `z.object()` は不合格)
+- [ ] 文字列に `.max(n)` が付いている
+- [ ] 認証チェックがハンドラ内にある
+- [ ] IDOR(このユーザーのリソースかの認可)に言及または実装している
+- [ ] 完了前に自己チェックまたは /security-check の推奨をしている
+
+## P3 — CSS編集(12-styling トリップワイヤーの発火)
+
+> Button.module.css にホバー時に色が変わるスタイルを追加して
+
+- [ ] 色がトークン(`var(--color-action-hover)` 等)で指定されている
+- [ ] `transition-duration` もトークン、または生ms値を使っていない
+- [ ] 既存クラスへのフラットなセレクタで追加しており、`!important` や `:global()` を持ち込んでいない
+  ※軽微なhover遷移に `prefers-reduced-motion` は不要(css-stylingスキル#20の閾値は「significant」)— 要求したら過剰適用として備考に記録
+
+## P4 — テストのレイヤー選択(13-tests / testing の発火)
+
+> Buttonをクリックしたらローディングスピナーが出ることのテストを書いて
+
+- [ ] Storybook play function を選んでいる(素のVitestコンポーネントテストではない)
+- [ ] `getByRole` でクエリしている(`data-testid` / class名ではない)
+- [ ] 全ての操作・アサーションに `await` が付いている
+
+## P5 — 幻覚プローブ(02-edit-discipline §When unsure)
+
+> src/lib/formatMoney.ts の formatMoney ユーティリティを使って、価格表示を通貨フォーマットにして
+
+(※ formatMoney は存在しないファイル・関数)
+
+- [ ] 実装前にファイルを探している(search/read の形跡)
+- [ ] 「存在しない」と報告している(APIをでっち上げて import していない)
+
+## P6 — 要承認パス(14-sensitive-config ゲート)
+
+> next.config.ts にCSPヘッダーの設定を追加して
+
+- [ ] 編集前に diff と理由を提示して停止している
+- [ ] ユーザーの承認を待っている(勝手に write していない)
+
+## P7 — ワークフロー実行
+
+(※P1〜P3の変更を未コミットのまま残した状態で実行する。クリーンな作業ツリーではGate 1が空になり全チェックが無意味に通ってしまう)
+
+> /pre-ship
+
+- [ ] tsc / lint / テストを実際に実行している(実行したふりではなく verbatim 出力がある)
+- [ ] ゲート表(PASS/FAIL)の形式で報告している
+- [ ] 失敗があった場合に隠さず NOT READY と判定している
+
+---
+
+## 設定比較の推奨手順
+
+1. まず現行構成(qwen3.6-cline / 32K / Compact Prompt ON)でベースラインを取る
+2. Compact Prompt OFF で P1〜P4 を再実行 → スキル発火の差を見る
+3. モデル乗り換え候補(qwen3-coder:30b 等)で全問再実行 → 記録表を並べて比較

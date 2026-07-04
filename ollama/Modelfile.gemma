@@ -1,0 +1,11 @@
+# Cline用 Gemma Modelfile — Planモード(設計・相談)向け
+# 作成: ollama create gemma4-cline -f ollama/Modelfile.gemma
+# 注: gemma4:latest は小型バリアントのため27B級の前提を満たしません。Plan(読み・相談)専用とし、
+#     ファイル編集を行うActモードにはModelfile.qwen側のモデルを使ってください。
+#     より大きいGemmaを使う場合は FROM をそのタグ(例 gemma4:27b)に変更。
+# サンプリングはGemma公式推奨値(temperature 1.0 / top_p 0.95 / top_k 64)。
+FROM gemma4:latest
+PARAMETER num_ctx 32768
+PARAMETER temperature 1.0
+PARAMETER top_p 0.95
+PARAMETER top_k 64

@@ -1,0 +1,81 @@
+/* Starter design tokens — copy to src/styles/tokens.css and adapt the values.
+   css-styling スキルとStylelint設定はこのファイルの存在を前提にしています。
+   Tiers: primitive(components never use) → semantic(components use these) → component(only when needed).
+   Breakpoints (custom properties don't work in media queries — canonical list):
+   sm 640px / md 768px / lg 1024px / xl 1280px */
+:root {
+  /* --- primitives: never referenced from component modules --- */
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --red-400: #f87171;
+  --red-600: #dc2626;
+  --gray-50: #f9fafb;
+  --gray-200: #e5e7eb;
+  --gray-400: #9ca3af;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --white: #ffffff;
+
+  /* --- semantic: what components consume --- */
+  --color-bg: var(--white);
+  --color-surface: var(--gray-50);
+  --color-border: var(--gray-200);
+  --color-text: var(--gray-900);
+  --color-text-muted: var(--gray-600);
+  --color-action: var(--blue-600);
+  --color-action-hover: var(--blue-700);
+  --color-danger: var(--red-600);
+  --color-focus-ring: var(--blue-600);
+
+  /* spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  /* type scale (rem; line-height unitless in components) */
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+
+  /* radii / shadows */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px rgb(0 0 0 / 0.1);
+
+  /* z-index ladder — never raw numbers in components */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+
+  /* motion */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dark theme: redefine SEMANTIC tokens only (values still come from primitives above) —
+   every new semantic color token gets a dark value here at creation time */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: var(--gray-900);
+    --color-surface: var(--gray-800);
+    --color-border: var(--gray-700);
+    --color-text: var(--gray-50);
+    --color-text-muted: var(--gray-400);
+    --color-action: var(--blue-400);
+    --color-action-hover: var(--blue-500);
+    --color-danger: var(--red-400);
+    --color-focus-ring: var(--blue-400);
+  }
+}

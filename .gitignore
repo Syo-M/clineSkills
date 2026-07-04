@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# install.sh がターゲットプロジェクト側に生成する成果物
+# (通常このリポジトリには作られないが、誤って本体をターゲットにした場合の保険)
+.cline/rules-backup-*/
+.cline/ruleset-manifest.txt
+.cline/ruleset-version.txt
+.cline/ruleset-changelog.md

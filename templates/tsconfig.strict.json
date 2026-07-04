@@ -1,0 +1,12 @@
+{
+  "_comment": "Strict flags to merge into the target repo's tsconfig.json compilerOptions. これが01-coreの型ルールの機械的強制です。既存tsconfigに下記を追記してください。exactOptionalPropertyTypes はReactエコシステムの型と衝突しノイズが多いため意図的に外しています(必要なら手動で)。",
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true
+  }
+}
