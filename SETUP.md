@@ -101,8 +101,11 @@ VS Code の Cline 設定で:
 1. **API Provider**: `Ollama`、Base URL `http://localhost:11434`
 2. **Model**: `qwen3.6-cline`(Modelfileで作った名前)
 3. **Context Window**: Modelfile の `num_ctx` と同じ **32768** を設定(不一致だと切り詰めが起きる)
-4. **Use Compact Prompt(Settings → Features)を ON** — システムプロンプトが約10%に縮み、ローカルモデルでは事実上必須。
-   - 代償: **MCPツールと Focus Chain が無効化**されます。ローカル運用ではオフで困る場面は少ないはず。
+4. **Use Compact Prompt(Settings → Features)— モデルにより ON/OFF を実測で決める**
+   - ON の利点: システムプロンプトが約10%に縮む。スキルの自動発火は生きる(qwen3.6で確認)。
+   - ON の代償: **MCPツールと Focus Chain が無効化**。加えて**複雑なツール手順でモデルが自前の関数呼び出し形式に化けて実行されない**ことがある(qwen3-coder-30bで観測 — §8参照)。
+   - **qwen3-coder-30b は OFF が正解**(18GBなので32Kにフルプロンプトが載る)。`<function=...>` がテキスト出力されたら OFF に。
+   - 判断: まず OFF で試し、コンテキスト不足やスキル未発火が問題になったら ON を検討、が安全。
 5. **Plan/Act のモデル分離**: Plan モードに `gemma4-cline`、Act モードに `qwen3.6-cline` を割り当て可能。
 6. **Auto-approve は読み取り系のみ**(Read files / List files)。書き込み・コマンド実行は目視確認を推奨 — 弱いモデルの編集ミスを人間が最後に止める層です。
 
