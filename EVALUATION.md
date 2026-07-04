@@ -76,7 +76,8 @@ AIレビューとは別枠の「実測」。素振りリポジトリ(Vite react-
 |---|---|---|---|---|
 | P1 | Buttonコンポーネント | 5 | **5** | スキル(react-components + css-styling)自動読込・named export・data-variant・token徹底(lint通過)・自発的にtsc/lint実行。満点 |
 | P2 | コメント保存API | 5 | **0** | qwen3-coder-30b-cline、クリーン条件(答え非開示・Actモード・Expressで置き場所補完)。zod無し(手書きif検証)・認証無し・IDOR無し・自己チェック無し。helmet/corsは付与。**11-server-boundaries は発火したがモデルが従わなかった**(下記) |
-| P3〜P7 | | 13 | — | 未 |
+| P3 | CSSホバー | 3 | **3** | `12-styling`発火下でトークン`var()`・フラットセレクタ・!important/:global無しを遵守。**単純なスタイル規約には従えた**(P2との対比)。ただし `--color-bg-hover` は未定義トークン=実際は色が変わらない実バグ+「変わります」の虚偽宣言。「表層規約は守るが意味的正しさが抜ける」癖はP2と同型 |
+| P4〜P7 | | 10 | — | 未 |
 
 **確定した発見(レビューの保留を解消)**:
 - **Compact Prompt ON でもスキルは自動読込される** — P1でCline画面に "Cline loaded the skill: react-components / css-styling" を確認。SETUP §7.6の手動 `/skill-name` フォールバックは「保険」として残せばよく、必須の運用切替ではないと確定(qwen3.6-cline での1データ点。他モデルでも同様かは要追試)。
