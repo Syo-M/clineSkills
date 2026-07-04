@@ -3,6 +3,11 @@
 このルールセット自体の変更履歴。`core/**` や `packs/**` のルール・スキル・ワークフロー・templates・Modelfileを変更したら(/retro 経由を含め)ここに1行追記する。
 形式: [Keep a Changelog](https://keepachangelog.com/) 準拠、バージョンはSemVer。
 
+## [2.2.1] - 2026-07-04
+
+### Fixed
+- **`11-server-boundaries.md` のパスglobの穴を修正** — ルート直下の `server.js`/`server.ts`/`api.js` 等が**どのglobにもマッチせずトリップワイヤーが発火しない**問題(既存は `**/server/**`=ディレクトリ、`**/*.server.*` のみで、素の `server.*`/`api.*` を拾えなかった)。`**/server.*` `**/api.*` `**/routes.*` を追加。minimatchで実測し、`server.js`等を拾いReactコンポーネント(App.tsx等)は誤爆しないことを確認。実機P2でモデルが `server.js` を作り続けたため発覚 — **これまでのP2(0点)は復唱テストが未成立だった**(発火しなければ復唱指示が載らない)ことも判明、EVALUATION訂正済み
+
 ## [2.2.0] - 2026-07-04
 
 実機golden-prompts検証(EVALUATION.md「実機検証」参照)の発見を設計に反映。テーマは「暗黙要件の明示化」と「機械的強制の拡充」。

@@ -1,10 +1,13 @@
 ---
 paths:
   - "**/api/**"
+  - "**/api.*"
   - "**/route.*"
+  - "**/routes.*"
   - "**/actions.*"
   - "**/actions/**"
   - "**/server/**"
+  - "**/server.*"
   - "**/*.server.*"
   - "**/middleware.*"
   - "**/webhooks/**"
