@@ -18,7 +18,7 @@
   --gray-700: #374151;
   --gray-800: #1f2937;
   --gray-900: #111827;
-  --white: #ffffff;
+  --white: #fff;
 
   /* --- semantic: what components consume --- */
   --color-bg: var(--white);
@@ -49,8 +49,8 @@
   /* radii / shadows */
   --radius-sm: 4px;
   --radius-md: 8px;
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px rgb(0 0 0 / 0.1);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 5%);
+  --shadow-md: 0 4px 6px rgb(0 0 0 / 10%);
 
   /* z-index ladder — never raw numbers in components */
   --z-dropdown: 100;

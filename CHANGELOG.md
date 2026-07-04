@@ -3,6 +3,15 @@
 このルールセット自体の変更履歴。`core/**` や `packs/**` のルール・スキル・ワークフロー・templates・Modelfileを変更したら(/retro 経由を含め)ここに1行追記する。
 形式: [Keep a Changelog](https://keepachangelog.com/) 準拠、バージョンはSemVer。
 
+## [2.1.1] - 2026-07-04
+
+実機の採点用fixture(Vite react-ts)への導入で表面化したtemplatesの不具合を修正。レビュアーがPLAUSIBLEとしていた点が実機で確定した。
+
+### Fixed
+- `templates/eslint.config.js` — `allowDefaultProject` から `*.config.ts` を除外。フレームワークは `vite.config.ts`/`next.config.ts` を tsconfig.node.json に含めるため、project service と allowDefaultProject の両方に存在してeslintがエラーになっていた(実機で確認)
+- `templates/README.md` — `npm i` のeslintを `^9` に固定。2026-07時点で `eslint-plugin-import` が ESLint 10 未対応のため、無印だと `eslint@10` が入りERESOLVE衝突する
+- `templates/tokens.css` — 自身のstylelint設定(config-standard継承)を通らなかった箇所を修正: `#ffffff`→`#fff`、`rgb(... / 0.05)`→`rgb(... / 5%)`
+
 ## [2.1.0] - 2026-07-04
 
 初心者向けの導入体験を追加。「賢さが要らない判断はLLMにやらせない」方針に沿い、環境判定は決定論的スクリプトが担う。

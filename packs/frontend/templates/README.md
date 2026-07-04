@@ -17,7 +17,9 @@
 ## 必要パッケージ
 
 ```bash
-npm i -D eslint @eslint/js typescript-eslint \
+# eslintは ^9 に固定する。2026-07時点で eslint-plugin-import が ESLint 10 に未対応のため、
+# 無印だと eslint@10 が入って peer 依存衝突(ERESOLVE)になる。
+npm i -D eslint@^9 @eslint/js@^9 typescript-eslint \
   eslint-plugin-import eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y \
   stylelint stylelint-config-standard stylelint-declaration-strict-value
 ```

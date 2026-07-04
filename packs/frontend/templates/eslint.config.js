@@ -16,9 +16,11 @@ export default tseslint.config(
   {
     languageOptions: {
       parserOptions: {
-        // allowDefaultProject: root config files (this file included) are not in tsconfig —
-        // without this, `eslint .` fails on its own config with "not found by the project service".
-        projectService: { allowDefaultProject: ['*.js', '*.mjs', '*.cjs', '*.config.ts'] },
+        // allowDefaultProject: root config files not in any tsconfig (this file, stylelint.config.mjs).
+        // Do NOT list *.config.ts here — frameworks put vite.config.ts / next.config.ts in a
+        // tsconfig.node.json, and a file present in BOTH the project service and allowDefaultProject errors.
+        // If your project has a *.config.ts in no tsconfig, add its exact filename to this array.
+        projectService: { allowDefaultProject: ['*.js', '*.mjs', '*.cjs'] },
       },
     },
     settings: { react: { version: 'detect' } },
