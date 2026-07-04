@@ -10,6 +10,7 @@ paths:
 # Form Tripwire(フォーム編集時の強制ルール)
 
 You are editing a form — the most common place user input enters the system.
+**FIRST: restate in one line each which rules below apply to this change. THEN write the code.**
 
 1. Load the `security` skill now if it is not loaded.
 2. Re-validate on the server with a zod schema: `z.strictObject({...})`, `.max(n)` on every string. Client validation is UX only.

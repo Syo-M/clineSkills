@@ -9,7 +9,8 @@ paths:
 
 # Test Tripwire(テスト編集時の強制ルール)
 
-You are editing tests. Pick the layer FIRST:
+You are editing tests.
+**FIRST: restate in one line each which rules below apply to this change. THEN write the code.** Pick the layer before anything else:
 
 1. Load the `testing` skill now if it is not loaded.
 2. Pure logic → Vitest unit test. Component behavior → Storybook story + play function. Cross-page journey → Playwright E2E. Visual appearance → VRT over stories.

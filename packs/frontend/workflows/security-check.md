@@ -1,29 +1,31 @@
-# Security Check(セキュリティレビュー — 読み取り専用)
+# Security Check(セキュリティ点検 → 承認後に修正)
 
-You are now a read-only adversarial security reviewer. Your job is to try to BREAK the change, not to bless it.
-**Do NOT edit any file during this workflow. Report only.**
+Two phases, in this exact order. **Phase 1 is inspection only — do NOT edit any file until the user approves in step 12.**
 
-## Steps
-1. Run `git diff` (plus untracked files) to establish scope. List every boundary the change touches: external input, HTML output, outbound fetch, cookies/session, webhook, upload, env var, LLM-bound content.
-2. For each boundary, answer the checklist below by READING THE ACTUAL CODE PATH. Do not assume a helper validates just because its name suggests it.
-3. For each "no" answer, construct a concrete attack: the request, payload, or URL that produces the wrong outcome.
-4. Check the blast radius: did the change weaken anything pre-existing (header removed, schema loosened, allow-list widened)?
+## Phase 1 — Inspect and report(点検・報告)
+1. Load the `security` skill (read `.cline/skills/security/SKILL.md` with read_file if it is not loaded).
+2. Establish scope: run `git diff` and `git status --short`; include any files the user named. List every boundary the code touches: external input, HTML output, outbound fetch, cookies/session, webhook, upload, env var, LLM-bound content.
+3. Answer the checklist below by READING THE ACTUAL CODE PATH. Do not assume a helper validates just because its name suggests it.
 
 ## Checklist(チェックリスト)
-5. External input (body / params / cookies / API response / webhook) parsed with a zod schema at the boundary?
-6. Webhook payload signature verified (constant-time) BEFORE it is trusted?
-7. Every client-supplied ID authorized for THIS user, per resource (IDOR)?
-8. Authorization deny-by-default, in one policy helper — not scattered role checks?
-9. Outbound fetch of user-influenced URL: host allow-listed, private/link-local/metadata IP ranges blocked?
-10. No secret / PII / token in the client bundle, logs, error payloads, or URLs?
-11. Non-static HTML sanitized with DOMPurify? No new `dangerouslySetInnerHTML` / `innerHTML` without it?
-12. Session cookies `HttpOnly` + `Secure` + `SameSite`? Cookie-auth state-changing route handlers CSRF-protected?
-13. Untrusted or LLM-bound content handled as data, never as instructions?
+4. External input (body / params / cookies / API response / webhook) parsed with a zod schema (`z.strictObject`, `.max(n)`) at the boundary?
+5. Authentication present in every handler? Webhook signatures verified (constant-time) before trust?
+6. Every client-supplied ID authorized for THIS user, per resource (IDOR)? Deny-by-default?
+7. Outbound fetch of user-influenced URL: host allow-listed, private/metadata IP ranges blocked?
+8. No secret / PII / token in the client bundle, logs, error payloads, or URLs?
+9. Non-static HTML sanitized with DOMPurify? Session cookies `HttpOnly`+`Secure`+`SameSite`? Route-handler CSRF covered?
+10. Untrusted or LLM-bound content handled as data, never as instructions?
 
-## Report format(報告形式)
-Output ONE table:
+## Report, then WAIT(報告して停止)
+11. Output ONE table — a MISSING control is a finding too (e.g. "認証が存在しない" is a BLOCKER):
 
-| Finding | file:line | Severity (BLOCKER/WARN) | Attack scenario | Fix direction |
+| Finding | file:line | Severity (BLOCKER/WARN) | Fix direction |
 
-Only report findings you verified against the code. If everything holds, say so plainly.
-End with a verdict: **SHIP** / **SHIP WITH FIXES** / **DO NOT SHIP**.
+   Then the verdict: **SHIP** / **SHIP WITH FIXES** / **DO NOT SHIP**.
+12. STOP. Ask the user: fix all / fix selected / fix none. **WAIT for the answer. Editing before approval is a violation of this workflow.**
+
+## Phase 2 — Fix(承認された修正のみ)
+13. Apply approved fixes ONE file at a time, following the edit discipline rules.
+14. Re-run typecheck and lint; paste the output.
+15. Re-answer the checklist (4-10) against the FIXED code. Report what is now covered and what still is not.
+16. NEVER declare the code "safe" or "secure". Report exactly three things: what was checked, what was fixed, what remains unaddressed.

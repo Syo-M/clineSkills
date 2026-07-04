@@ -18,7 +18,8 @@ paths:
 
 # Server-Boundary Tripwire(境界コード編集時の強制ルール)
 
-You are editing server-side boundary code. These are the rules most often skipped:
+You are editing server-side boundary code.
+**FIRST: in your reply, restate in one line each which rule numbers below apply to this change. THEN write the code.** Rules you did not restate are the rules you will forget.
 
 1. Load the `security` skill now if it is not loaded.
 2. Parse ALL external input (body, params, cookies, headers, third-party responses) with a zod schema before use: `z.strictObject`, `.max(n)` on strings.

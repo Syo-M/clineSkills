@@ -21,7 +21,8 @@
 # 無印だと eslint@10 が入って peer 依存衝突(ERESOLVE)になる。
 npm i -D eslint@^9 @eslint/js@^9 typescript-eslint \
   eslint-plugin-import eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y \
-  stylelint stylelint-config-standard stylelint-declaration-strict-value
+  stylelint stylelint-config-standard stylelint-declaration-strict-value \
+  stylelint-value-no-unknown-custom-properties
 ```
 
 package.json にスクリプトを追加:
@@ -42,5 +43,6 @@ package.json にスクリプトを追加:
 - `no-eval` / `no-danger` / `forbid-dom-props(style)` → `security` スキル + 01-core
 - `jsx-a11y` recommended → `a11y` スキル
 - Stylelint `declaration-strict-value`(var()必須)/ z-index禁止 / camelCase → `css-styling` スキル
+- Stylelint `csstools/value-no-unknown-custom-properties`(未定義トークン参照の禁止) → 12-styling #3(実機evalでLLMが未定義トークンを2度発明した実バグへの対策)
 
 これは出発点です。フレームワークプリセット(Next.js等)やstorybook/playwright系プラグインはプロジェクトに応じて追加してください。
