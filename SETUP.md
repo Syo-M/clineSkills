@@ -123,7 +123,8 @@ core(共通の編集規律)+ 指定パックが対象の `.clinerules/` と `.cl
 3. 「Buttonコンポーネントを作って」→ 規約準拠(named export / tokens / data-variant)の出力になり、最後に tsc/lint を実行する
 4. 「コメント保存APIを追加して」→ 指示しなくても zod 検証と認可チェックが入る
 5. `/pre-ship` → ゲート表(PASS/FAIL)が verbatim の出力付きで出る
-6. **Compact Prompt ON の状態で 3〜4 を再実行** — スキルの自動発火が生きているか確認する。発火しない場合は、タスク開始時に `/skill-name`(例 `/security`)で手動読み込みする運用に切り替える
+6. **Compact Prompt ON の状態で 3〜4 を再実行** — スキルの自動発火が生きているか確認する。
+   ※ 実機確認済み: qwen3.6-cline + Compact Prompt ON でも react-components / css-styling は自動読込された(EVALUATION.md 実機検証)。もし別モデルで発火しない場合のみ、タスク開始時に `/skill-name`(例 `/security`)で手動読み込みする運用に切り替える
 7. 本格運用の前に [packs/frontend/eval/golden-prompts.md](packs/frontend/eval/golden-prompts.md) で採点し、モデルが実用ライン(18/23以上)か確認する
 
 ## 8. トラブルシュート

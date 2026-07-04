@@ -62,9 +62,23 @@
 8. **`gitleaks protect --staged` は非推奨形** — `gitleaks git --staged` へ。かつ未ステージ変更をスキャンしない問題(③)
 
 ### 実機検証待ち(設計では潰せない・eval P1/P2/P6が検証項目)
-- `paths:` トリップワイヤーが**新規作成ファイル**で発火するか(01-core #11 でバックストップ済み)
-- Compact Prompt ON でスキルの**自動**発火が生きるか(手動 `/skill-name` フォールバック文書化済み)
-- 検証済みClineバージョンの明記(③の指摘: 現状どこにも書かれていない)
+- `paths:` トリップワイヤーが**新規作成ファイル**で発火するか(01-core #11 でバックストップ済み)— P2/P6で検証中
+- ~~Compact Prompt ON でスキルの**自動**発火が生きるか~~ → **解消(下記 実機検証を参照)**
+- 検証済みClineバージョンの明記(③の指摘: 現状どこにも書かれていない)— 記入待ち
+
+## 実機検証(golden-prompts、進行中)
+
+AIレビューとは別枠の「実測」。素振りリポジトリ(Vite react-ts、frontendパック+templates導入、lint/typecheckクリーンなベースライン)で実施。
+
+**環境**: MacBook Pro M4 Max / 36GB / qwen3.6-cline(num_ctx 32768)/ **Compact Prompt ON** / Act モード
+
+| # | 課題 | 満点 | 得点 | 所見 |
+|---|---|---|---|---|
+| P1 | Buttonコンポーネント | 5 | **5** | スキル(react-components + css-styling)自動読込・named export・data-variant・token徹底(lint通過)・自発的にtsc/lint実行。満点 |
+| P2〜P7 | | 18 | — | 進行中 |
+
+**確定した発見(レビューの保留を解消)**:
+- **Compact Prompt ON でもスキルは自動読込される** — P1でCline画面に "Cline loaded the skill: react-components / css-styling" を確認。SETUP §7.6の手動 `/skill-name` フォールバックは「保険」として残せばよく、必須の運用切替ではないと確定(qwen3.6-cline での1データ点。他モデルでも同様かは要追試)。
 
 ### 設計上の受容(修正しない判断)
 - React/CSS Modules単一スタック前提 — 本ルールセットの設計方針。別スタックはフォークで対応
