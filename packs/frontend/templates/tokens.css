@@ -52,7 +52,9 @@
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 5%);
   --shadow-md: 0 4px 6px rgb(0 0 0 / 10%);
 
-  /* z-index ladder — never raw numbers in components */
+  /* z-index ladder — never raw numbers in components (positive OR negative) */
+  --z-behind: -1; /* decorative backgrounds / watermarks, behind content */
+  --z-base: 0;
   --z-dropdown: 100;
   --z-sticky: 200;
   --z-modal: 300;

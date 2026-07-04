@@ -12,7 +12,7 @@ description: CSS Modules, design tokens, variants, responsive layout, dark mode,
 3. All colors, spacing, radii, shadows, typography, z-index live as CSS custom properties in `src/styles/tokens.css` on `:root`.
 4. Component modules consume tokens ONLY: `var(--color-action)`. A raw hex/px value for a themable property in a component module is a bug.
 5. Token tiers: primitive (`--blue-600`, never used in components) → semantic (`--color-action`, what components consume) → component (`--button-height-md`, only when needed).
-6. Spacing on a scale (`--space-1` … `--space-8`). Z-index from a fixed ladder (`--z-dropdown`, `--z-modal`, `--z-toast`) — never `z-index: 9999`.
+6. Spacing on a scale (`--space-1` … `--space-8`). Z-index from a fixed ladder — never a raw integer, positive OR negative. The ladder INCLUDES a behind-content layer for decorative backgrounds/watermarks: `--z-behind: -1`, `--z-base: 0`, `--z-dropdown: 100`, `--z-modal: 300`, `--z-toast: 400`. A background element sits at `var(--z-behind)`, never a raw `z-index: -1`.
 7. Dark mode: redefine tokens under `prefers-color-scheme` or `[data-theme]`. Components never branch on theme themselves.
 8. Every new token gets a value for every theme at creation time.
 

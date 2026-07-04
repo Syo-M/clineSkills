@@ -3,6 +3,16 @@
 このルールセット自体の変更履歴。`core/**` や `packs/**` のルール・スキル・ワークフロー・templates・Modelfileを変更したら(/retro 経由を含め)ここに1行追記する。
 形式: [Keep a Changelog](https://keepachangelog.com/) 準拠、バージョンはSemVer。
 
+## [2.2.4] - 2026-07-04
+
+showcaseのビジュアル刷新(動く背景)で表面化した、z-indexラダーの穴を修正。
+
+### Fixed
+- **z-indexラダーに背景層を追加** — 従来 `--z-dropdown`/`--z-modal`/`--z-toast`(全て前面)のみで、装飾背景を「コンテンツの後ろ」に置く値が無かった。`--z-behind: -1` `--z-base: 0` を追加(css-styling rule 6 とtemplates/tokens.css)。背景コンポーネントが `z-index: -1` を直書きしてstylelintに弾かれ手戻りしていた実例への対策
+
+### 記録(EVALUATION)
+- 大規模なビジュアル変更(ダークテーマ全面組み替え等)では、全CSS値がstylelintの厳格トークン強制に触れ、**lint手戻りが多発**。厳格強制の一貫性メリットの裏の、創造/視覚作業でのイテレーションコスト。ローカルモデルはこの修正ループに労力を取られ設計に集中しづらい。緩和策: `stylelint --fix`、ルールセットの穴(逃げ道)を都度塞ぐ
+
 ## [2.2.3] - 2026-07-04
 
 showcase(実アプリ)のDashboard実装で表面化した、規約の「逃げ道の欠落」を修正。レビュアーが以前PLAUSIBLEと指摘していた摩擦が実使用で確定。
