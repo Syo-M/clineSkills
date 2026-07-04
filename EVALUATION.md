@@ -83,7 +83,12 @@ AIレビューとは別枠の「実測」。素振りリポジトリ(Vite react-
 - **パス条件ルールは新規作成ファイルでも発火する** — P2でserver側の新規ファイル作成中に "Conditional rules applied: 11-server-boundaries.md, 12-styling.md" を確認。レビューの最後の保留(新規作成ファイルでトリップワイヤーが効くか)を解消。01-core #11 のバックストップは保険として残す。
 
 **モデル選定の実データ(重要)**:
-- **qwen3.6:latest(35B-A3B MoE)はエージェント編集に不安定** — P2で `execute_command` の必須パラメータ `requires_approval` を欠落させてループ、`replace_in_file` の検索不一致も併発し、P2(境界API)を完遂できず。サイズ(23GB)ではなく**実効パラメータ数(A3Bは約3B active)とdense/MoEの別**がツール呼び出し安定性を左右する実例。→ SETUP推奨の **qwen3-coder:30b(dense)** で要再測。P2はモデル差し替え後に採点。
+- **qwen3.6:latest(35B-A3B MoE)はエージェント編集に不安定** — P2で `execute_command` の必須パラメータ `requires_approval` を欠落させてループ、`replace_in_file` の検索不一致も併発し、P2(境界API)を完遂できず。サイズ(23GB)ではなく**実効パラメータ数(A3Bは約3B active)とdense/MoEの別**がツール呼び出し安定性を左右する実例。
+- **qwen3-coder-30b-cline(dense, 公式推奨サンプリング焼き込み)でツール呼び出しループが解消** — 同じ課題で `requires_approval`/`path` 欠落が消え、一貫したPlan応答まで到達。生の `qwen3-coder:30b`(デフォルトサンプリング)ではまだループしたので、**dense であることに加え temperature 0.7 等の調整が効く**。SETUPの「dense 30B + 推奨サンプリング」を実データで裏付け。
+- 補足: Cline 4.0.6 は自身の Context Window 設定から num_ctx をOllamaへ渡す(`ollama ps` で生モデルでもCONTEXT 32768を確認)。Modelfileのnum_ctx焼き込みは二重の保険。**サンプリング**の差の方がツール呼び出し安定性に効いた。
+
+**手法バグと修正(重要)**:
+- **採点基準ファイル(EVAL.md)を被験ワークスペースに置いてしまい、eval汚染が発生** — P2再測時、モデルがワークスペース直下のEVAL.mdを read_file し、5チェック項目を復唱して合わせに来た(生成コードにスキルルール番号の注釈も付与)。コード品質自体は高い(zod strictObject+.max/認証/IDOR/randomUUID/監査ログ)が、「**指示なしで**セキュリティを入れたか」の測定にならない。→ 採点ファイルをワークスペース外へ退避し、golden-prompts.md 実行ルールに「答えを被験環境に置くな」「境界プロンプト前後でベースラインに戻す」「Actモード」を明記。**P2はクリーンな状態で再測が必要**(進行中)。汚染実装は cline-eval-notes/ に証拠保全。
 
 ### 設計上の受容(修正しない判断)
 - React/CSS Modules単一スタック前提 — 本ルールセットの設計方針。別スタックはフォークで対応

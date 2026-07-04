@@ -1,6 +1,8 @@
 # Golden Prompts (documents pack) — モデル・設定の評価基準
 
-documentsパックが「そのモデル・その設定で」機能するかを測る手動評価。実行ルール・記録方法は [frontendパックのeval](../../frontend/eval/golden-prompts.md) と同じ(各プロンプトごとに `/newtask`、そのまま貼る、2回走らせてブレを見る)。
+documentsパックが「そのモデル・その設定で」機能するかを測る手動評価。実行ルール・記録方法は [frontendパックのeval](../../frontend/eval/golden-prompts.md) と同じ(各プロンプトごとに `/newtask`、そのまま貼る、Actモード、2回走らせてブレを見る)。
+
+**重要: この採点基準ファイルを被験ワークスペース内に置かないこと** — モデルが読むと答えが見えてしまう。別ウィンドウ・GitHubで開く。
 
 ## 準備
 
