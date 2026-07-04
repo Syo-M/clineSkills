@@ -135,5 +135,6 @@ core(共通の編集規律)+ 指定パックが対象の `.clinerules/` と `.cl
 | 「You did not use a tool…」ループ | num_ctx 不足が最有力。`ollama ps` で 32768 を確認。Compact Prompt ON も確認 |
 | replace_in_file が失敗し続ける | 小型モデルの既知問題。ルール(02)が2回失敗→全文置換へ誘導する。頻発するならモデルを Qwen3 Coder 30B へ |
 | `requires_approval` 等の必須パラメータ欠落でループ / ツール呼び出しの書式崩れ | モデルのツール呼び出し能力不足。**Start New Task** でリセット(Proceed Anywaysは同じループに戻りやすい)。多発するモデルはエージェント編集に不向き — 特にMoE(例 qwen3.6=A3Bは実効約3B)はサイズの割に不安定。**dense の Qwen3 Coder 30B へ差し替え**を推奨 |
+| `<function=...>` や `<tool_call>` が**実行されず文章として出力**される | ツール呼び出しの**形式不一致**(モデルが自前の関数呼び出し形式を吐き、Clineが解釈できない)。最有力は Compact Prompt によるツール形式指示の痩せ細り → **Compact Prompt を OFF** にして再試行(qwen3-coder 18GBなら32Kにフルプロンプトが載る)。それでも直らなければ、そのモデルはClineのツール形式と相性が悪い |
 | 生成が極端に遅い/Macが固まる | スワップ発生。num_ctx を 16K に下げるか、他のアプリを閉じる |
 | ワークフローが `/` に出ない | `.clinerules/workflows/` の配置を確認。Cline を再読み込み |
