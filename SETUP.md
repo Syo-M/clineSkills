@@ -1,6 +1,18 @@
 # SETUP — Ollama + Cline ローカルLLM環境構築
 
-MacBook Pro (Apple Silicon, RAM 36GB) を想定した、Cline + Ollama でローカルLLMを「正確に」動かすための設定手順。速度より正確性を優先する。
+Apple Silicon Mac で Cline + Ollama のローカルLLMを「正確に」動かすための設定手順。速度より正確性を優先する。
+
+## 0. かんたんセットアップ(推奨 — まずこれ)
+
+```bash
+./setup.sh
+```
+
+このMacのRAM・チップを自動検出し、機種に合ったモデルと `num_ctx` を対話式で提案 → Ollamaモデルの作成まで自動で行い、最後に**Clineの設定画面に入力する値**を表示します(Cline設定だけは手動 — 外部から書き換える手段がないため)。何も変更せず提案だけ見たい場合は `./setup.sh --check`。
+
+導入後、Clineのチャットで `/setup-check` を実行すると、モデルが実際の設定(RAM・ロード中モデル・CONTEXT長)を検査して整合を報告します。
+
+以降の §1〜§5 は、setup.sh がやっていることの解説と手動での代替手順です。
 
 ## 1. 前提
 

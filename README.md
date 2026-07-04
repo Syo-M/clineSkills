@@ -30,6 +30,7 @@ install.sh            # core + 指定パックをターゲットの .clinerules/
 ## 導入
 
 ```bash
+./setup.sh                                                   # 最初に1回: スペック検出→モデル作成→Cline設定値の表示(対話式)
 ./install.sh /path/to/your-project                          # frontendパック(既定)
 ./install.sh /path/to/your-project --with-templates          # + lint/tokensの強制レイヤー(推奨。tsconfigのみ手動マージ)
 ./install.sh /path/to/confidential-docs --pack documents     # documentsパック
@@ -50,7 +51,7 @@ install.sh            # core + 指定パックをターゲットの .clinerules/
 | 常時ルール(frontend) | `packs/frontend/clinerules/01-core.md` | `.clinerules/` | 毎リクエスト |
 | 常時ルール(documents) | `packs/documents/clinerules/04-docs-core.md` | `.clinerules/` | 毎リクエスト |
 | パス条件ルール | `packs/frontend/clinerules/10〜14` | `.clinerules/` | 該当ファイルを触った時のみ |
-| ワークフロー(共通) | `core/workflows/`(/retro /update-memory) | `.clinerules/workflows/` | `/名前` で呼んだ時のみ |
+| ワークフロー(共通) | `core/workflows/`(/retro /update-memory /setup-check) | `.clinerules/workflows/` | `/名前` で呼んだ時のみ |
 | ワークフロー(パック) | frontend: /pre-ship /review /security-check /a11y-check /new-component、documents: /proofread /anonymize | `.clinerules/workflows/` | 同上 |
 | スキル | frontend 8本 / documents 4本 | `.cline/skills/` | タスク内容にマッチした時のみ |
 | メモリ | `memory/*.template.md` → `memory/*.md` | `memory/` | タスク開始時。各40行以内 |

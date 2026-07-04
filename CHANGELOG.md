@@ -3,6 +3,15 @@
 このルールセット自体の変更履歴。`core/**` や `packs/**` のルール・スキル・ワークフロー・templates・Modelfileを変更したら(/retro 経由を含め)ここに1行追記する。
 形式: [Keep a Changelog](https://keepachangelog.com/) 準拠、バージョンはSemVer。
 
+## [2.1.0] - 2026-07-04
+
+初心者向けの導入体験を追加。「賢さが要らない判断はLLMにやらせない」方針に沿い、環境判定は決定論的スクリプトが担う。
+
+### Added
+- `setup.sh` — 対話式かんたんセットアップ: RAM/チップ自動検出 → RAM階層に応じたモデル・num_ctxの提案(既存モデルの再利用/qwen3-coder:30bのDL選択、16GB級には正直な非推奨警告+documentsパック案内)→ Modelfile生成と `ollama create` を代行 → Cline設定画面に入力する値を表示。`--check` で提案のみ(無変更)
+- `core/workflows/setup-check.md` — `/setup-check`: Cline内でモデル自身に `sysctl`/`ollama ps` を実行させ、RAM階層表と照合して設定の整合を報告する読み取り専用ワークフロー(設定の書き換えはClineの仕様上不可能なため検証・助言に限定)
+- SETUP.md §0「かんたんセットアップ」— まず setup.sh、§1以降は解説と手動代替という位置づけに変更
+
 ## [2.0.0] - 2026-07-04
 
 リポジトリを「共通コア + ドメインパック」構造へ再編し、機密文書編集用の documents パックを新設。
