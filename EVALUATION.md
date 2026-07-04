@@ -64,13 +64,13 @@
 ### 実機検証待ち(設計では潰せない・eval P1/P2/P6が検証項目)
 - `paths:` トリップワイヤーが**新規作成ファイル**で発火するか(01-core #11 でバックストップ済み)— P2/P6で検証中
 - ~~Compact Prompt ON でスキルの**自動**発火が生きるか~~ → **解消(下記 実機検証を参照)**
-- 検証済みClineバージョンの明記(③の指摘: 現状どこにも書かれていない)— 記入待ち
+- ~~検証済みClineバージョンの明記(③の指摘)~~ → **解消: Cline 4.0.6 を SETUP §1 に記載**
 
 ## 実機検証(golden-prompts、進行中)
 
 AIレビューとは別枠の「実測」。素振りリポジトリ(Vite react-ts、frontendパック+templates導入、lint/typecheckクリーンなベースライン)で実施。
 
-**環境**: MacBook Pro M4 Max / 36GB / qwen3.6-cline(num_ctx 32768)/ **Compact Prompt ON** / Act モード
+**環境**: MacBook Pro M4 Max / 36GB / **Cline 4.0.6** / qwen3.6-cline(num_ctx 32768)/ **Compact Prompt ON** / Act モード
 
 | # | 課題 | 満点 | 得点 | 所見 |
 |---|---|---|---|---|
