@@ -11,7 +11,7 @@
 - 各基準0〜10点(7=良、9+=例外的)、計 /150。指摘は **CONFIRMED**(ファイル・実テスト・公式ドキュメントで確認)と **SPECULATIVE**(推測)を区別させる。
 - レビュアーには実ファイルの読解に加え、install.sh の実行テストと Cline/Ollama 公式ドキュメントとの照合を許可。
 
-**注意**: 採点はAIレビュアーによる相対評価であり、実機(Cline + ローカルモデル)での動作実績ではない。実機の合否は [eval/golden-prompts.md](eval/golden-prompts.md) が担う。
+**注意**: 採点はAIレビュアーによる相対評価であり、実機(Cline + ローカルモデル)での動作実績ではない。実機の合否は [packs/frontend/eval/golden-prompts.md](packs/frontend/eval/golden-prompts.md) が担う。
 
 ## 採点推移
 

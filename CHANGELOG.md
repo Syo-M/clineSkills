@@ -1,7 +1,27 @@
 # Changelog
 
-このルールセット自体の変更履歴。`.clinerules/**` や `.cline/skills/**` を変更したら(/retro 経由を含め)ここに1行追記する。
+このルールセット自体の変更履歴。`core/**` や `packs/**` のルール・スキル・ワークフロー・templates・Modelfileを変更したら(/retro 経由を含め)ここに1行追記する。
 形式: [Keep a Changelog](https://keepachangelog.com/) 準拠、バージョンはSemVer。
+
+## [2.0.0] - 2026-07-04
+
+リポジトリを「共通コア + ドメインパック」構造へ再編し、機密文書編集用の documents パックを新設。
+**ソースの配置は変わるがターゲット側の配置(.clinerules/ .cline/skills/)は不変** — v1.x導入済みプロジェクトへの再インストールはクリーンに通る(実テスト済み)。
+
+### Added
+- **packs/documents/** — ローカルLLMの特性(外部に出せない書類)を活かす新パック:
+  - `04-docs-core.md` — 機密保持フロア(外部送信の全面禁止・事実の発明禁止・【要確認】プレースホルダ・verbatim移動)+文書検証
+  - スキル4本: `docs-writing`(日本語ビジネス文書)/ `docs-proofread`(3パス校正)/ `docs-structure`(構成・pandocローカル変換)/ `docs-anonymize`(一貫プレースホルダ+対応表+残存チェック)
+  - ワークフロー2本: `/proofread`(読み取り専用校正)/ `/anonymize`(コピーに匿名化)
+  - `eval/golden-prompts.md` — 4課題13チェック(D2情報発明・D3外部参照拒否がゼロのモデルは機密文書に使わない)
+- `install.sh --pack <name>`(複数指定可、省略時frontend)— core+パックをステージングで合成して配置
+- SETUP.md — **RAM別の目安表(Apple Silicon汎用)**: 16GB(編集非推奨)/24GB(実用ライン)/32GB/36GB/48GB+。汎用Mac対応の第一歩
+- Ollamaモデル `qwen3.6-cline` / `gemma4-cline` を実機で作成済み(SETUP §2の手順を実行)
+
+### Changed
+- ソース配置: `.clinerules/` `.cline/skills/` `templates/` `eval/` → `core/` + `packs/frontend/` へ git mv(履歴保持)
+- ルール番号の規約を明文化: 01-03=core+frontend常時 / 04-05=documents常時 / 10-14=frontendパス条件 / 15-19=documentsパス条件(予約)
+- README/SETUP/EVALUATION のパス参照をパック構造に更新
 
 ## [1.3.0] - 2026-07-04
 
