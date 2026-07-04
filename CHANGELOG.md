@@ -3,6 +3,13 @@
 このルールセット自体の変更履歴。`core/**` や `packs/**` のルール・スキル・ワークフロー・templates・Modelfileを変更したら(/retro 経由を含め)ここに1行追記する。
 形式: [Keep a Changelog](https://keepachangelog.com/) 準拠、バージョンはSemVer。
 
+## [2.2.2] - 2026-07-04
+
+### Fixed (事実誤認の訂正)
+- **「dense vs MoE」の記述を全面訂正** — qwen3-coder:30b は dense ではなく `30B-A3B`(MoE、実効約3.3B)で、qwen3.6(35B-A3B)と同じMoEファミリー(Qwen3技術レポート/Ollamaで確認)。両者のツール呼び出し安定性の差はアーキテクチャではなく、**Clineのツールパーサ不一致(ローカルはXMLテキスト経路にフォールバック、[Cline #10843](https://github.com/cline/cline/issues/10843) 未解決)+ モデル毎のツールテンプレート品質差 + num_ctx**。EVALUATION/SETUPの該当箇所を訂正
+- 含意の整理: **ツール呼び出しのループ/書式崩れはハーネス側要因(モデルの能力問題ではない)**。一方でセキュリティ失敗(P2=0/5)は真のモデル限界で、この結論は不変
+- SETUP §4 を2026-07リサーチで更新: 推奨を qwen3-coder:30b に(MoEである旨明記)、代替候補(Devstral Small 2 24B=dense/Qwen3.6-27B/GLM-4.7-Flash)、MLX(M4で約3倍速だがツール問題は非解決)を追記
+
 ## [2.2.1] - 2026-07-04
 
 ### Fixed
