@@ -20,7 +20,7 @@ Run every gate below in order. Report each result VERBATIM. Never skip a gate si
 9. A failing or flaky test blocks shipping. Report it. Do not retry-loop it.
 
 ## Gate 5 — Scanners(機械スキャン — あれば実行)
-10. If installed (`command -v gitleaks`): run `gitleaks protect --staged`. Any finding blocks.
+10. If installed (`command -v gitleaks`): run `gitleaks dir .` (covers unstaged changes; on gitleaks older than 8.19 use `gitleaks detect --no-git`). Any finding blocks.
 11. If installed (`command -v semgrep`) and a `.semgrep/` config exists: run it on the changed files.
 12. If a tool is not installed, mark this gate SKIPPED (tool not installed) — never pretend it ran.
 

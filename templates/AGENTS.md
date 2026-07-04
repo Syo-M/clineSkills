@@ -10,6 +10,6 @@
 5. Never put secrets in client code, logs, or URLs. Session tokens in `HttpOnly`+`Secure`+`SameSite` cookies, never `localStorage`.
 6. Semantic HTML first (`button`, not `div onClick`). Everything keyboard-operable. Every input labeled.
 7. Work on one file at a time. Small diffs. No drive-by refactors.
-8. You are done ONLY when `npx tsc --noEmit`, lint, and affected tests pass. Paste the output. Never claim success with failing output.
+8. You are done ONLY when typecheck (the repo's `typecheck` script, or `tsc --noEmit` via its package manager), lint, and affected tests pass. Paste the output. Never claim success with failing output.
 9. Never guess an API or import path — read the file or search first.
 10. Do not edit CI workflows, lockfiles, framework configs, or agent rule files without explicit approval.

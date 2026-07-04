@@ -6,14 +6,15 @@ description: Test writing rules for Vitest units, Storybook play functions, Play
 
 ## Pick the layer FIRST(レイヤー選択)
 1. Pure logic (utils, reducers, formatting) → Vitest unit test.
-2. Component behavior → Storybook story + play function. NOT a plain Vitest component test.
+2. Component behavior → Storybook story + play function, NOT a plain Vitest component test. Two exceptions go to Vitest instead: headless hooks/providers with no visual state, and an exhaustive prop/branch matrix (roughly 6+ combinations) — write the matrix in Vitest and stories only for the meaningful visual states, never 8 near-identical stories.
 3. Cross-page user journey → Playwright E2E. Critical paths only.
 4. Visual appearance → VRT over existing stories. Never screenshot what a DOM assertion can check.
 
 Worked examples:
 - "Button shows a spinner while submitting" → Storybook play function.
 - "formatCurrency rounds half-up" → Vitest unit test.
-- "useDebounce timing" → Vitest with fake timers.
+- "useDebounce timing" → Vitest with fake timers (headless hook exception).
+- "Checkout form across 8 validation combinations" → Vitest for the matrix + stories for empty/error/submitting only.
 - "Checkout flow end to end" → Playwright.
 
 ## Cross-layer invariants(全レイヤー共通)
@@ -34,7 +35,7 @@ Worked examples:
 15. CSF3 shape:
 ```tsx
 import type { Meta, StoryObj } from '@storybook/react';
-import { expect, fn, userEvent } from 'storybook/test';
+import { expect, fn, userEvent } from 'storybook/test'; // Storybook 8: '@storybook/test'
 const meta = { component: LoginForm, args: { onSubmit: fn() } } satisfies Meta<typeof LoginForm>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -53,18 +54,19 @@ export const ShowsValidationError: Story = {
 18. `await` EVERY interaction and assertion — a missing await flakes in CI.
 19. Assert outcomes: error visible AND callback not called. Not just "no crash".
 20. `fn()` for every callback prop. Providers go in `.storybook/preview.tsx` decorators once, not per story. Portals/modals render outside the canvas — query them via `within(canvasElement.parentElement!)`, not `canvas`.
-21. Check the installed Storybook major version before using version-specific imports.
+21. Never disable animations or emulate reduced motion in play-function tests — that executes a different code path than users get. Assert post-animation state with auto-retrying queries (`findBy*`). Animations-off belongs to VRT only (rule 30).
+22. Check the installed Storybook major version before using version-specific imports.
 
 ## Playwright
-22. Locators: `getByRole(…, { name })` first. Never CSS/XPath tied to DOM structure or generated class names.
-23. Web-first assertions only: `await expect(locator).toBeVisible()`. Banned: `page.waitForTimeout()`, `expect(await locator.isVisible())`.
-24. Every test independent: own data, parallel-safe. Auth once per worker via `storageState` setup project; test the login flow itself in exactly one spec.
-25. Gitignore `playwright/.auth/`. Only ephemeral test accounts — never real credentials.
-26. Stub with `page.route()` for hard-to-trigger states. Never stub the thing the test verifies.
-27. CI: `retries: 2`, `trace: 'on-first-retry'`. Local: 0 retries so flake is loud. A retried pass is a flake report.
+23. Locators: `getByRole(…, { name })` first. Never CSS/XPath tied to DOM structure or generated class names.
+24. Web-first assertions only: `await expect(locator).toBeVisible()`. Banned: `page.waitForTimeout()`, `expect(await locator.isVisible())`.
+25. Every test independent: own data, parallel-safe. Auth once per worker via `storageState` setup project; test the login flow itself in exactly one spec.
+26. Gitignore `playwright/.auth/`. Only ephemeral test accounts — never real credentials.
+27. Stub with `page.route()` for hard-to-trigger states. Never stub the thing the test verifies.
+28. CI: `retries: 2`, `trace: 'on-first-retry'`. Local: 0 retries so flake is loud. A retried pass is a flake report.
 
 ## Visual regression
-28. Stories are the VRT surface. Do not build a parallel screenshot harness.
-29. Pin every flake source: mock the clock, fixture data via MSW, wait for `document.fonts.ready`, `animations: 'disabled'`, fixed viewport, generate baselines in the CI container (never mix macOS/Linux baselines).
-30. Keep `maxDiffPixelRatio` ≤ 0.01. Mask genuinely dynamic regions instead of loosening thresholds.
-31. Never auto-accept baselines. A diff is a regression to fix or an intended change to approve in the same PR.
+29. Stories are the VRT surface. Do not build a parallel screenshot harness.
+30. Pin every flake source: mock the clock, fixture data via MSW, wait for `document.fonts.ready`, `animations: 'disabled'` (VRT only — see rule 21), fixed viewport, generate baselines in the CI container (never mix macOS/Linux baselines).
+31. Keep `maxDiffPixelRatio` ≤ 0.01. Mask genuinely dynamic regions instead of loosening thresholds.
+32. Never auto-accept baselines. A diff is a regression to fix or an intended change to approve in the same PR.

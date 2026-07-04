@@ -14,7 +14,7 @@ Order of defense: reject untrusted data → validate at the boundary → sanitiz
 
 ## Validation(検証)— server-side, schema-first
 5. Every boundary parses input with zod before use: actions, route handlers, params, cookies, third-party responses, webhook payloads.
-6. Use `z.strictObject({...})` — unknown keys rejected (blocks mass-assignment like `isAdmin: true`).
+6. Use `z.strictObject({...})` — unknown keys REJECTED, so unexpected fields surface as errors. (Plain `z.object()` strips unknown keys — its parsed output also blocks mass-assignment — but silently hides client bugs.) Never spread the RAW input object into a DB write; always use the parsed result.
 7. Bound every user string with `.max(n)`. Unbounded input is a DoS vector.
 8. Never run user-controlled regex. Reject `__proto__` / `constructor` / `prototype` keys in user JSON.
 9. IDOR: client IDs are claims. After auth, check the resource belongs to THIS user, per resource, in every handler.
@@ -57,7 +57,7 @@ Order of defense: reject untrusted data → validate at the boundary → sanitiz
 32. DO log security events (auth success/failure, 403s, role changes, webhook signature failures) with actor, action, result, IP.
 
 ## Headers
-33. Keep CSP with `script-src` free of `'unsafe-inline'` (use nonces/hashes), `object-src 'none'`, `frame-ancestors 'none'`.
+33. Keep CSP with `script-src` free of `'unsafe-inline'` (use nonces/hashes), `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`.
 34. `Cache-Control: no-store` on authenticated/personalized responses — a cached per-user response is a data leak.
 35. Keep `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`.
 

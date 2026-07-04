@@ -4,8 +4,9 @@ MacBook Pro (Apple Silicon, RAM 36GB) を想定した、Cline + Ollama でロー
 
 ## 1. 前提
 
-- macOS + [Ollama](https://ollama.com) インストール済み
-- VS Code + Cline 拡張機能インストール済み
+- macOS + [Ollama](https://ollama.com) インストール済み(**Ollama本体は最新に保つ**)
+- VS Code + **Cline v3.48以降**(Skills機能対応版)。`paths:`条件ルール・Workflows・Compact Promptも使うため、Clineも最新に保つこと
+  - ※本ルールセットは2026-07時点のCline公式ドキュメントと照合して設計。実機で全機能のスモークテスト(§7)を通したら、そのClineバージョンをここに追記する
 - モデルは 27〜30B クラスの 4-bit 量子化を想定(下記「モデル選定」参照)
 
 ## 2. Modelfile と num_ctx — 最重要設定
@@ -48,6 +49,14 @@ KVキャッシュはコンテキスト長に比例してRAMを消費します。
 | 64K | 〜8-16 GB | 〜34 GB超 | 不可またはスワップ発生 |
 
 **Qwen3 Coder 30B 4-bit(約18GB)に乗り換えると32Kでも約5GBの余裕が生まれます** — 精度・安定性の面でも下記の通り推奨。
+
+さらにKVキャッシュ自体を圧縮する手もあります(出力品質への影響は軽微):
+
+```bash
+# Ollamaの起動環境に設定(launchctl setenv または Ollama.app の環境設定)
+OLLAMA_FLASH_ATTENTION=1
+OLLAMA_KV_CACHE_TYPE=q8_0   # KVキャッシュが約半分に — 32Kの「ギリギリ」に余裕ができる
+```
 
 32Kで運用し、コンテキストが伸びたら `/newtask` / `/smol` で区切るのが正解です(このルールセットの `02-edit-discipline.md` がモデル自身にもそれを促します)。
 

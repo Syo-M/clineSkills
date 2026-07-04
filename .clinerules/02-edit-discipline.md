@@ -6,18 +6,19 @@
 3. Before editing, state a numbered plan of the files you will touch. If more than 3 files, propose splitting the task and stop.
 4. If the conversation is long or you are unsure of earlier context, tell the user to run /newtask or /smol. Do not push on with degraded context.
 5. No drive-by refactors. Change only what the task requires.
+6. Read only what the task needs. Before opening a long file, use search_files to confirm it is the right one — every full-file read permanently consumes context.
 
 ## File editing(ファイル編集)
-6. Before any edit, read the current file content. Never edit from memory of an old version.
-7. Use replace_in_file with SMALL search blocks: 1-5 lines of exact, unique text.
-8. Copy the search text EXACTLY from the file you just read, including whitespace and indentation.
-9. If replace_in_file fails once: re-read the file, then retry with a smaller, more exact block.
-10. If replace_in_file fails twice on the same file: STOP retrying. Use write_to_file with the COMPLETE file content instead.
-11. Exception: never full-rewrite a file longer than ~150 lines — truncation risk. Re-read and try one smaller replace block; if that also fails, report and ask the user.
-12. After write_to_file, confirm the result contains everything: no dropped imports, functions, or exports.
-13. Circuit breaker: after 4 failed edit attempts in one task (any files combined), STOP. Report exactly what failed and ask the user how to proceed.
+7. Before any edit, read the current file content. Never edit from memory of an old version.
+8. Use replace_in_file with SMALL search blocks: 1-5 lines of exact, unique text.
+9. Copy the search text EXACTLY from the file you just read, including whitespace and indentation.
+10. If replace_in_file fails once: re-read the file, then retry with a smaller, more exact block.
+11. If replace_in_file fails twice on the same file: STOP retrying and count the file's lines first.
+12. File is 150 lines or fewer → rewrite it completely with write_to_file. Longer than 150 lines → do NOT full-rewrite (truncation risk); try ONE smaller replace block, and if that fails too, report and ask the user.
+13. After write_to_file, re-read the file and compare against what you read before: same imports, same exported names, similar line count. Restore anything missing before moving on.
+14. Circuit breaker: after 4 failed edit attempts in one task (all files combined), STOP. Report exactly what failed and ask the user how to proceed.
 
 ## When unsure(不明時)
-14. Unknown API signature: search the codebase or the package's type definitions. Never invent it.
-15. Two valid approaches: pick the one this repo already uses.
-16. Ambiguous requirement: ask the user. Guessing wastes more time than asking.
+15. Unknown API signature: search the codebase or the package's type definitions. Never invent it.
+16. Two valid approaches: pick the one this repo already uses.
+17. Ambiguous requirement: ask the user. Guessing wastes more time than asking.

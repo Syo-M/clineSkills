@@ -32,6 +32,6 @@
 20. Match this repo's existing conventions over any general knowledge you have.
 
 ## Skills(スキル)
-21. Before writing code, check the available skills for a match and load it first:
+21. Before writing code, check the available skills for a match and load it first. If it does not auto-load, read `.cline/skills/<name>/SKILL.md` with read_file yourself — never claim a skill is loaded without its content in context:
     react-components / css-styling / testing / security / a11y / nextjs / data-media / i18n
 22. Load at most TWO skills at once — pick the most specific. Three only when a workflow explicitly names three.

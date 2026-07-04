@@ -3,6 +3,25 @@
 このルールセット自体の変更履歴。`.clinerules/**` や `.cline/skills/**` を変更したら(/retro 経由を含め)ここに1行追記する。
 形式: [Keep a Changelog](https://keepachangelog.com/) 準拠、バージョンはSemVer。
 
+## [1.3.0] - 2026-07-04
+
+v1.2.0再評価(114/150、EVALUATION.md)の残存must-fix 8件+推奨事項を反映。
+
+### Fixed
+- `workflows/review.md` — スキル読込を2本上限に(3レビュアー全員が指摘した01-core #22との矛盾を解消。広いdiffは領域ごとにパス分割し/newtaskで再実行)
+- `security` #6 — `z.strictObject`の根拠説明を訂正(素の`z.object()`も未知キーを落としマスアサインメント自体は防ぐ。strictの利点は「クライアントバグを隠さない」こと。RAW入力のspread禁止を明記)
+- コマンド統一の漏れ — `new-component` #7/#13と`templates/AGENTS.md` #8の`npx tsc`/`npm test`直書きを解消
+- `pre-ship` Gate 5 — 非推奨の`gitleaks protect --staged`を`gitleaks dir .`へ(未ステージ変更もカバー。旧版は`detect --no-git`)
+- install.sh — 孤児ルール(ローカル編集済み+上流削除)をマニフェストに引き継ぎ**毎回**警告(従来は初回のみで以後永久に黙って二重読込)/配布記録なし時の「ローカル編集を検出」誤ラベルを修正/`--with-templates`で既存ファイルが現行テンプレートと異なる場合にdiff通知
+
+### Added
+- `01-core` #21 — スキル読込の具体的手段を明記(`read_file`で`.cline/skills/<name>/SKILL.md`を読む。内容がコンテキストに無いのに「読込済み」と主張しない)
+- `02-edit-discipline` — 全文書換の判断を「先に行数を数える」単一手順に再構成(#11-12)、write_to_file後の検証手順を具体化(#13: import/export名/行数の比較)、読み込み規律(#6: 長いファイルはsearch_files で確認してから読む)
+- `testing` — Vitest例外を復元(headlessフック/6組合せ以上のプロップ行列)、「インタラクションテストでアニメーション無効化禁止(無効化はVRTのみ)」を復元(#21)
+- `security` #33 — CSPに`base-uri 'self'`/`form-action 'self'`を復元
+- `new-component` — カスタムウィジェット時の3本目スキル(`a11y`)を「明示的許可」として記述(01-core #22と整合)
+- `SETUP.md` — Cline v3.48+の前提と実機検証時のバージョン追記欄、`OLLAMA_FLASH_ATTENTION`/`OLLAMA_KV_CACHE_TYPE=q8_0`によるKVキャッシュ削減
+
 ## [1.2.0] - 2026-07-04
 
 3視点の独立レビュー(ローカルLLM実効性/技術的正確性/運用・保守性、105/150)のmust-fixを反映。
