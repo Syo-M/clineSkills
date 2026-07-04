@@ -25,29 +25,30 @@ description: CSS Modules, design tokens, variants, responsive layout, dark mode,
 .button[data-variant='danger'] { background: var(--color-danger); }
 ```
 10. Boolean UI state the same way (`data-open`); style off ARIA attributes when one exists: `[aria-expanded='true']`.
-11. `clsx` has one job: merging a consumer-passed `className` with the base class. 3+ conditional classes → restructure into variants.
+11. `clsx` has one job: merging a consumer-passed `className` with the base class. 3+ conditional classes → restructure into variants. A component that accepts `className` MUST merge it with its own classes (`` `${styles.base} ${className ?? ''}` ``), never let a spread `{...rest}` overwrite the base class.
+12. Data-driven CONTINUOUS values (a bar's height from data, a progress %, a computed position) are the one sanctioned use of the inline `style` prop — set a CSS custom property and consume it in the module: `style={{ '--bar-h': `${pct}%` } as CSSProperties}` + `.bar { block-size: var(--bar-h); }`. Two lint escape hatches are needed because both rules assume static styling: on the TSX line, `// eslint-disable-next-line react/forbid-dom-props -- data-driven <what>`; on the CSS line, `/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties -- injected at runtime via style */` (the var is runtime-injected, not a token). Enumerated states still use data-attributes (rule 9), never inline style.
 
 ## Layout & responsive
-12. Mobile-first: base styles, then `@media (min-width: …)` upward.
-13. Flex `gap` / grid over margin hacks. `aspect-ratio` for media boxes. Container queries for container-adaptive components.
-14. Logical properties (`margin-inline`, `padding-block`, `inset-inline-start`) over physical ones — free RTL support.
-15. No fixed heights on text containers; use `min-height` if needed.
+13. Mobile-first: base styles, then `@media (min-width: …)` upward.
+14. Flex `gap` / grid over margin hacks. `aspect-ratio` for media boxes. Container queries for container-adaptive components.
+15. Logical properties (`margin-inline`, `padding-block`, `inset-inline-start`) over physical ones — free RTL support.
+16. No fixed heights on text containers; use `min-height` if needed.
 
 ## Globals
-16. `src/styles/` contains exactly: `tokens.css`, `reset.css`, `globals.css`. Nothing else is global.
-17. No `:global()` in component modules except for third-party DOM — with a comment naming the library.
+17. `src/styles/` contains exactly: `tokens.css`, `reset.css`, `globals.css`. Nothing else is global.
+18. No `:global()` in component modules except for third-party DOM — with a comment naming the library.
 
 ## Motion(モーション)
-18. Animate `transform` and `opacity` only. Never animate `width/height/top/left`.
-19. Escalation ladder: CSS transition → CSS keyframes → Web Animations API → animation library (last resort, ask the user first — never add a library for a fade).
-20. Every significant animation respects `@media (prefers-reduced-motion: reduce)`: remove decorative motion; reduce state-conveying motion to a quick fade, not deleted.
-21. Durations/easings as tokens (`--duration-fast`, `--ease-out`). UI feedback stays 100–250ms.
-22. Never gate content behind an entrance animation. Never start the LCP element at `opacity: 0`.
-23. Exit animations: keep the element mounted until `transitionend`/`animationend`, then unmount.
+19. Animate `transform` and `opacity` only. Never animate `width/height/top/left`.
+20. Escalation ladder: CSS transition → CSS keyframes → Web Animations API → animation library (last resort, ask the user first — never add a library for a fade).
+21. Every significant animation respects `@media (prefers-reduced-motion: reduce)`: remove decorative motion; reduce state-conveying motion to a quick fade, not deleted.
+22. Durations/easings as tokens (`--duration-fast`, `--ease-out`). UI feedback stays 100–250ms.
+23. Never gate content behind an entrance animation. Never start the LCP element at `opacity: 0`.
+24. Exit animations: keep the element mounted until `transitionend`/`animationend`, then unmount.
 
 ## Design-system consistency(デザインシステム)
-24. Same variant vocabulary everywhere: `variant`, `size` (`sm/md/lg`). No per-component synonyms (`kind`, `appearance`).
-25. Shared components accept `className` (merged onto the root) and forward `ref`; spread remaining DOM props onto the root.
-26. One icon system: SVG-as-component, sized via tokens, `fill="currentColor"`. Decorative icons `aria-hidden="true"`; icon-only buttons need `aria-label`.
-27. Type scale as tokens (`--text-sm` … `--text-2xl`), sizes in `rem`, line-height unitless. Body text `max-inline-size: 65ch`.
-28. From Figma: map every value to the nearest existing token — never hardcode inspect-panel pixels. Auto-layout maps to flex/grid + `gap`. Resolve what the mock doesn't show: responsive, focus/hover, loading/error/empty, long text, dark theme.
+25. Same variant vocabulary everywhere: `variant`, `size` (`sm/md/lg`). No per-component synonyms (`kind`, `appearance`).
+26. Shared components accept `className` (merged onto the root) and forward `ref`; spread remaining DOM props onto the root.
+27. One icon system: SVG-as-component, sized via tokens, `fill="currentColor"`. Decorative icons `aria-hidden="true"`; icon-only buttons need `aria-label`.
+28. Type scale as tokens (`--text-sm` … `--text-2xl`), sizes in `rem`, line-height unitless. Body text `max-inline-size: 65ch`.
+29. From Figma: map every value to the nearest existing token — never hardcode inspect-panel pixels. Auto-layout maps to flex/grid + `gap`. Resolve what the mock doesn't show: responsive, focus/hover, loading/error/empty, long text, dark theme.

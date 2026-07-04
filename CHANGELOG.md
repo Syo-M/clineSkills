@@ -3,6 +3,15 @@
 このルールセット自体の変更履歴。`core/**` や `packs/**` のルール・スキル・ワークフロー・templates・Modelfileを変更したら(/retro 経由を含め)ここに1行追記する。
 形式: [Keep a Changelog](https://keepachangelog.com/) 準拠、バージョンはSemVer。
 
+## [2.2.3] - 2026-07-04
+
+showcase(実アプリ)のDashboard実装で表面化した、規約の「逃げ道の欠落」を修正。レビュアーが以前PLAUSIBLEと指摘していた摩擦が実使用で確定。
+
+### Added / Fixed (css-styling スキル)
+- **rule 11 強化**: 共有コンポーネントは受け取った `className` を自前クラスと**結合必須**、`{...rest}` で上書きさせない(showcaseのButtonで色クラスが消えたバグ=classNameがspreadに上書きされる、が自動チェック全通過で目視のみ検出された実例への対策)
+- **rule 12 新設**: データ駆動の連続値(棒グラフの高さ・進捗%・算出位置)は inline `style` の唯一の正当用途。CSS変数を `style` で注入して module で消費する。**2つのlint逃げ道**を明記 — TSX側 `react/forbid-dom-props` の eslint-disable、CSS側 `csstools/value-no-unknown-custom-properties`(v2.2.0で追加した未定義トークン検出が、runtime注入変数を誤検出する)の stylelint-disable。両rule(no inline style / no unknown token)が静的スタイル前提のため
+- css-stylingの採番を1〜29に整理
+
 ## [2.2.2] - 2026-07-04
 
 ### Fixed (事実誤認の訂正)
