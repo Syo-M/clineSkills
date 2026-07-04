@@ -75,10 +75,15 @@ AIレビューとは別枠の「実測」。素振りリポジトリ(Vite react-
 | # | 課題 | 満点 | 得点 | 所見 |
 |---|---|---|---|---|
 | P1 | Buttonコンポーネント | 5 | **5** | スキル(react-components + css-styling)自動読込・named export・data-variant・token徹底(lint通過)・自発的にtsc/lint実行。満点 |
-| P2〜P7 | | 18 | — | 進行中 |
+| P2 | コメント保存API | 5 | 保留 | qwen3.6-clineがツール呼び出しループで完遂せず(下記)。11-server-boundaries発火は確認。dense modelで再測予定 |
+| P3〜P7 | | 13 | — | 未 |
 
 **確定した発見(レビューの保留を解消)**:
 - **Compact Prompt ON でもスキルは自動読込される** — P1でCline画面に "Cline loaded the skill: react-components / css-styling" を確認。SETUP §7.6の手動 `/skill-name` フォールバックは「保険」として残せばよく、必須の運用切替ではないと確定(qwen3.6-cline での1データ点。他モデルでも同様かは要追試)。
+- **パス条件ルールは新規作成ファイルでも発火する** — P2でserver側の新規ファイル作成中に "Conditional rules applied: 11-server-boundaries.md, 12-styling.md" を確認。レビューの最後の保留(新規作成ファイルでトリップワイヤーが効くか)を解消。01-core #11 のバックストップは保険として残す。
+
+**モデル選定の実データ(重要)**:
+- **qwen3.6:latest(35B-A3B MoE)はエージェント編集に不安定** — P2で `execute_command` の必須パラメータ `requires_approval` を欠落させてループ、`replace_in_file` の検索不一致も併発し、P2(境界API)を完遂できず。サイズ(23GB)ではなく**実効パラメータ数(A3Bは約3B active)とdense/MoEの別**がツール呼び出し安定性を左右する実例。→ SETUP推奨の **qwen3-coder:30b(dense)** で要再測。P2はモデル差し替え後に採点。
 
 ### 設計上の受容(修正しない判断)
 - React/CSS Modules単一スタック前提 — 本ルールセットの設計方針。別スタックはフォークで対応
